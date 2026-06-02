@@ -1,0 +1,22 @@
+# ~/.grafana_ai.toml — grafana-ai-report default configuration
+#
+# Place this file at ~/.grafana_ai.toml
+# CLI flags always override values set here.
+#
+# Supported keys:
+
+# Default time window (e.g. "6h", "24h", "7d")
+# window = "24h"
+
+# OpenAI model to use
+# model = "gpt-4.1"
+
+# Only fire the Discord webhook when highest severity >= this level
+# Valid values: HIGHEST, HIGH, MEDIUM, LOW, LOWEST
+# alert_threshold = "MEDIUM"
+
+# Suppress all progress output — print only the report and errors
+# quiet = false
+
+# Always skip Discord, even when DISCORD_WEBHOOK_URL is set
+# no_discord = false

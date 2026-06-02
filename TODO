@@ -21,7 +21,7 @@
       between them. Useful for post-incident review or tracking a trend between
       two specific points in time.
 
-- [ ] Config file support (~/.grafana_ai.toml)
+- [x] Config file support (~/.grafana_ai.toml)
       Persist defaults like window, model, and alert_threshold so the command line
       stays clean for daily use. CLI flags override config file values.
 
@@ -77,3 +77,7 @@
       Write the report to an explicit path instead of the auto-named file in
       REPORT_DIR. Handy for one-off runs you want to keep separate from the
       regular archive.
+
+- [x] Config file support (~/.grafana_ai.toml)
+      Persist defaults like window, model, and alert_threshold so the command line
+      stays clean for daily use. CLI flags override config file values.

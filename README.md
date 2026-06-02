@@ -67,6 +67,25 @@ expands to `<:Name:123456789>` and the number is the ID.
 
 ---
 
+## Config file
+
+Persistent defaults can be set in `~/.grafana_ai.toml` so you don't need to
+repeat common flags on every run. CLI flags always override config file values.
+
+```toml
+# ~/.grafana_ai.toml
+window          = "24h"
+model           = "gpt-4.1"
+alert_threshold = "MEDIUM"
+quiet           = false
+no_discord      = false
+```
+
+Copy `grafana_ai.toml.example` from the repo as a starting point. Supported
+keys: `window`, `model`, `alert_threshold`, `quiet`, `no_discord`.
+
+---
+
 ## Usage
 
 ```
@@ -141,6 +160,7 @@ grafana_ai/
 ├── prompt.py            # System prompt and message builder
 ├── discord_notify.py    # Discord embed builder and webhook poster
 ├── requirements.txt
-├── .env.example         # Template — copy to .env and fill in values
+├── .env.example             # Template — copy to .env and fill in values
+├── grafana_ai.toml.example  # Template — copy to ~/.grafana_ai.toml to set defaults
 └── .gitignore
 ```

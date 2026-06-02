@@ -100,7 +100,36 @@ def _cmd_dry_run(window: str) -> None:
     print(ai_ready_data[:500])
 
 
+_CONFIG_PATH = pathlib.Path.home() / ".grafana_ai.toml"
+_VALID_CONFIG_KEYS = {"window", "model", "alert_threshold", "quiet", "no_discord"}
+
+
+def _load_config() -> dict:
+    """Load ~/.grafana_ai.toml if present. Returns a dict of argparse dest → value."""
+    try:
+        import tomllib
+    except ImportError:
+        try:
+            import tomli as tomllib  # type: ignore[no-redef]
+        except ImportError:
+            return {}
+    if not _CONFIG_PATH.exists():
+        return {}
+    with open(_CONFIG_PATH, "rb") as f:
+        raw = tomllib.load(f)
+    unknown = set(raw) - _VALID_CONFIG_KEYS
+    if unknown:
+        raise SystemExit(f"{_CONFIG_PATH}: unknown key(s): {', '.join(sorted(unknown))}")
+    valid_thresholds = {"HIGHEST", "HIGH", "MEDIUM", "LOW", "LOWEST"}
+    if "alert_threshold" in raw and raw["alert_threshold"] not in valid_thresholds:
+        raise SystemExit(
+            f"{_CONFIG_PATH}: alert_threshold must be one of {', '.join(valid_thresholds)}"
+        )
+    return raw
+
+
 def main() -> None:
+    config = _load_config()
     parser = argparse.ArgumentParser(description="AlmaLinux Mirror AI Health Report")
     parser.add_argument(
         "--list-reports", action="store_true",
@@ -148,6 +177,7 @@ def main() -> None:
         "--output", metavar="FILE",
         help="Write the report to this path instead of the auto-named file in REPORT_DIR.",
     )
+    parser.set_defaults(**config)
     args = parser.parse_args()
 
     if args.list_reports:
