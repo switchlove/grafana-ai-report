@@ -1,4 +1,5 @@
 .env
+.grafana_ai.toml
 __pycache__/
 *.pyc
 *.pyo
