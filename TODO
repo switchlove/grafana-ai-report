@@ -1,0 +1,79 @@
+## High value, low effort
+
+## Medium value
+
+- [ ] --context-reports N
+      Currently the previous report is always the single most recent. Passing N=3
+      would include the last N reports as assistant messages, giving the AI a trend
+      over multiple runs rather than just one comparison point.
+
+## Bigger lift
+
+- [ ] Scheduled daemon mode (--every 24h)
+      Runs on a loop so you don't need a cron job. Uses time.sleep between runs.
+
+- [ ] Email delivery
+      Send the full report text via SMTP in addition to the Discord summary embed.
+      Useful for archiving or reaching people not on Discord.
+
+- [ ] --compare [FILE1] [FILE2]
+      Pass two report filenames to the AI and ask it to summarise what changed
+      between them. Useful for post-incident review or tracking a trend between
+      two specific points in time.
+
+- [ ] Config file support (~/.grafana_ai.toml)
+      Persist defaults like window, model, and alert_threshold so the command line
+      stays clean for daily use. CLI flags override config file values.
+
+## Completed
+
+- [x] --dry-run flag
+      Fetch and process Grafana data, print dataset size and a sample, then exit
+      without calling OpenAI. Free way to verify the Grafana connection and preview
+      what the AI would receive.
+
+- [x] --no-discord flag
+      Skip the webhook even when DISCORD_WEBHOOK_URL is set. Useful for ad-hoc
+      runs where you don't want to spam the channel.
+
+- [x] --show-report [filename]
+      Print a saved report to stdout. Without an argument, show the most recent one.
+
+- [x] --list-reports
+      List saved reports with filename, window, and file size. Simple wrapper
+      around REPORT_DIR.glob.
+
+- [x] Previous window mismatch warning
+      If the loaded previous report was run with a different --window, note it in
+      the AI user message so the comparison isn't silently misleading (e.g.
+      comparing a 24h analysis to a previous 7d one).
+
+- [x] Severity-based exit code
+      Exit 0 if highest severity is LOW or LOWEST, exit 1 if MEDIUM, exit 2 if
+      HIGH or HIGHEST. Makes the tool usable in alerting pipelines and shell
+      conditionals without parsing the report text.
+
+- [x] --quiet flag
+      Suppress all progress lines (loaded previous report, forwarding to OpenAI…).
+      Only the report itself and errors are printed. Useful in cron jobs where
+      noisy stdout is unwanted.
+
+- [x] --since FILENAME
+      Use a specific saved report as the previous-report context instead of always
+      the most recent. Lets you compare against a known-good baseline rather than
+      whatever ran last.
+
+- [x] --alert-threshold SEVERITY
+      Only fire the Discord webhook when the report contains at least the given
+      severity level (e.g. MEDIUM). Cuts noise on clean days where everything is
+      LOW/LOWEST.
+
+- [x] --prompt-extra "text"
+      Append a free-form note to the AI user message so the model can account for
+      known events (e.g. --prompt-extra "Maintenance window ran 02:00-04:00 UTC,
+      ignore the traffic drop").
+
+- [x] --output FILE
+      Write the report to an explicit path instead of the auto-named file in
+      REPORT_DIR. Handy for one-off runs you want to keep separate from the
+      regular archive.
